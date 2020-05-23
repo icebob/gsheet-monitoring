@@ -101,7 +101,7 @@ class GSheetReporter extends BaseReporter {
                         const valueIndex = 3 + metric.labelNames.length + 1;
 
                         // Update timestamp
-                        const timeCell = sheet.getCell(rowIndex, valueIndex - 1);
+                        const timeCell = sheet.getCell(rowIndex, 1);
                         timeCell.value = this.convertTimestamp(item.timestamp);
 
                         // Update values
@@ -126,10 +126,10 @@ class GSheetReporter extends BaseReporter {
     getCellValues(metric, item, onlyValues) {
         const cells = onlyValues ? [] : [
             metric.name,
+            this.convertTimestamp(item.timestamp),
             this.broker.nodeID,
             item.key,
             ...metric.labelNames.map(label => item.labels[label]),
-            this.convertTimestamp(item.timestamp)
         ];
 
         switch(metric.type) {
@@ -161,10 +161,10 @@ class GSheetReporter extends BaseReporter {
     getSheetHeaders(metric, item) {
         const cells = [
             "Metric",
+            "Timestamp",
             "NodeID",
             "LabelKey",
             ...metric.labelNames,
-            "Timestamp"
         ];
 
         switch(metric.type) {
@@ -198,8 +198,8 @@ class GSheetReporter extends BaseReporter {
 
         let row;
         for (let i = 1; i <= 10; i++) {
-            const nodeID = sheet.getCell(i, 1);
-            const cellKey = sheet.getCell(i, 2);
+            const nodeID = sheet.getCell(i, 2);
+            const cellKey = sheet.getCell(i, 3);
 
             if (nodeID.value == this.broker.nodeID && cellKey.value == key) {
                 row = i;
